@@ -111,11 +111,14 @@ class RequestPasswordResetHandler
             '{forum}' => $this->settings->get('forum_title'),
         ];
 
-        $body = $this->translator->trans('core.email.reset_password.body', $data);
+        $bodyText = $this->translator->trans('core.email.reset_password.body_text', $data);
+        $bodyHtml = $this->translator->trans('core.email.reset_password.body_html', $data);
 
-        $this->mailer->raw($body, function (Message $message) use ($user, $data) {
+        $this->mailer->raw($bodyText, function (Message $message) use ($user, $data, $bodyText, $bodyHtml) {
             $message->to($user->email);
-            $message->subject('['.$data['{forum}'].'] '.$this->translator->trans('core.email.reset_password.subject'));
+            $message->subject($this->translator->trans('core.email.reset_password.subject'));
+            $message->setBody($bodyText);
+            $message->addPart($bodyHtml, 'text/html');
         });
 
         return $user;
