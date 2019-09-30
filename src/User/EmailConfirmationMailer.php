@@ -53,11 +53,14 @@ class EmailConfirmationMailer
         $email = $event->email;
         $data = $this->getEmailData($event->user, $email);
 
-        $body = $this->translator->trans('core.email.confirm_email.body', $data);
+        $bodyText = $this->translator->trans('core.email.activate_account.body_text', $data);
+        $bodyHtml = $this->translator->trans('core.email.activate_account.body_html', $data);
 
-        $this->mailer->raw($body, function (Message $message) use ($email, $data) {
+        $this->mailer->raw($bodyText, function (Message $message) use ($email, $bodyText, $bodyHtml) {
             $message->to($email);
-            $message->subject('['.$data['{forum}'].'] '.$this->translator->trans('core.email.confirm_email.subject'));
+            $message->subject($this->translator->trans('core.email.activate_account.subject'));
+            $message->setBody($bodyText);
+            $message->addPart($bodyHtml, 'text/html');
         });
     }
 
