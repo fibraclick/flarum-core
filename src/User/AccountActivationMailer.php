@@ -62,10 +62,11 @@ class AccountActivationMailer
 
         $data = $this->getEmailData($user, $user->email);
 
-        $body = $this->translator->trans('core.email.activate_account.body', $data);
-        $subject = '['.$data['{forum}'].'] '.$this->translator->trans('core.email.activate_account.subject');
+        $bodyText = $this->translator->trans('core.email.activate_account.body_text', $data);
+        $bodyHtml = $this->translator->trans('core.email.activate_account.body_html', $data);
+        $subject = $this->translator->trans('core.email.activate_account.subject');
 
-        $this->queue->push(new SendRawEmailJob($user->email, $subject, $body));
+        $this->queue->push(new SendRawEmailJob($user->email, $subject, $bodyText, $bodyHtml));
     }
 
     /**
