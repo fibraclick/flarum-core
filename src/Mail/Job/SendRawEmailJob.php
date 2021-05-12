@@ -17,20 +17,26 @@ class SendRawEmailJob extends AbstractJob
 {
     private $email;
     private $subject;
-    private $body;
+    private $bodyText;
+    private $bodyHtml;
 
-    public function __construct(string $email, string $subject, string $body)
+    public function __construct(string $email, string $subject, string $bodyText, string $bodyHtml = null)
     {
         $this->email = $email;
         $this->subject = $subject;
-        $this->body = $body;
+        $this->bodyText = $bodyText;
+        $this->bodyHtml = $bodyHtml;
     }
 
     public function handle(Mailer $mailer)
     {
-        $mailer->raw($this->body, function (Message $message) {
+        $mailer->raw($this->bodyText, function (Message $message) {
             $message->to($this->email);
             $message->subject($this->subject);
+            if ($this->bodyHtml != null) {
+                $message->setBody($this->bodyText);
+                $message->addPart($this->bodyHtml, 'text/html');
+            }
         });
     }
 }
