@@ -48,9 +48,10 @@ trait AccountActivationMailerTrait
      */
     protected function sendConfirmationEmail(User $user, $data)
     {
-        $body = $this->translator->trans('core.email.activate_account.body', $data);
+        $bodyText = $this->translator->trans('core.email.activate_account.body_text', $data);
+        $bodyHtml = $this->translator->trans('core.email.activate_account.body_html', $data);
         $subject = $this->translator->trans('core.email.activate_account.subject');
 
-        $this->queue->push(new SendRawEmailJob($user->email, $subject, $body));
+        $this->queue->push(new SendRawEmailJob($user->email, $subject, $bodyText, $bodyHtml));
     }
 }
