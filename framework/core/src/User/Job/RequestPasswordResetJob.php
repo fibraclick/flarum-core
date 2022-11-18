@@ -52,9 +52,10 @@ class RequestPasswordResetJob extends AbstractJob
             'forum' => $settings->get('forum_title'),
         ];
 
-        $body = $translator->trans('core.email.reset_password.body', $data);
+        $bodyText = $translator->trans('core.email.reset_password.body_text', $data);
+        $bodyHtml = $translator->trans('core.email.reset_password.body_html', $data);
         $subject = $translator->trans('core.email.reset_password.subject');
 
-        $queue->push(new SendRawEmailJob($user->email, $subject, $body));
+        $queue->push(new SendRawEmailJob($user->email, $subject, $bodyText, $bodyHtml));
     }
 }
